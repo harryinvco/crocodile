@@ -1,0 +1,37 @@
+import styled from "styled-components";
+
+export const Container = styled.div`
+  min-height: 100vh;
+  background-color: ${(props) => (props.darkMode ? "#111827" : "#F9FAFB")};
+  color: ${(props) => (props.darkMode ? "white" : "black")};
+  padding: 20px;
+`;
+
+export const Title = styled.h1`
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+`;
+
+export const Card = styled.div`
+  background-color: ${(props) => (props.darkMode ? "#1F2937" : "white")};
+  border-radius: 0.5rem;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+`;
+
+export const Button = styled.button`
+  padding: 5px 10px;
+  background-color: ${(props) => (props.darkMode ? "#F3F4F6" : "#1F2937")};
+  color: ${(props) => (props.darkMode ? "#1F2937" : "#F3F4F6")};
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+`;
