@@ -3,7 +3,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { DragHandle } from "./StyledComponents";
 
 const SalesTrafficChart = ({ salesData, darkMode }) => (
-  <div style={{ /* styles */ }}>
+  <div style={{
+    backgroundColor: darkMode ? "#1F2937" : "white",
+    borderRadius: "0.5rem",
+    padding: "20px",
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    width: "100%",
+    maxWidth: "600px",
+    margin: "0 auto",
+  }}>
     <DragHandle className="drag-handle" />
     <h2 style={{ /* styles */ }}>Sales & Traffic</h2>
     <div style={{ height: "300px" }}>

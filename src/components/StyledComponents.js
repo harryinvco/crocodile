@@ -5,6 +5,10 @@ export const Container = styled.div`
   background-color: ${(props) => (props.darkMode ? "#111827" : "#F9FAFB")};
   color: ${(props) => (props.darkMode ? "white" : "black")};
   padding: 20px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 export const Title = styled.h1`
@@ -29,6 +33,7 @@ export const GridItem = styled.div`
   padding: 20px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   position: relative;
+  min-height: ${(props) => (props.minimized ? "50px" : "auto")};
 `;
 
 export const DragHandle = styled.div`
@@ -43,4 +48,12 @@ export const GridContainer = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(150px, auto);
   gap: 20px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;

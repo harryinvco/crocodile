@@ -5,6 +5,7 @@ import SalesTrafficChart from "./components/SalesTrafficChart";
 import Chatbot from "./components/Chatbot";
 import TodoList from "./components/TodoList";
 import { Container, Title, Button, GridContainer, GridItem } from "./components/StyledComponents";
+import Draggable from "react-draggable";
 
 const competitorData = [
   { name: "Comp A", marketShare: 20, growth: 5, satisfaction: 75 },
@@ -82,7 +83,7 @@ export default function PremiumExecutiveDashboard() {
     <Container darkMode={darkMode}>
       <Title>Crocodiles Shoes Executive Dashboard</Title>
       <GridContainer>
-        <GridItem>
+        <GridItem minimized={minimized["competitorMonitoring"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => toggleMinimize("competitorMonitoring")}
@@ -98,7 +99,7 @@ export default function PremiumExecutiveDashboard() {
             />
           )}
         </GridItem>
-        <GridItem>
+        <GridItem minimized={minimized["emailWidget"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => toggleMinimize("emailWidget")}
@@ -107,7 +108,7 @@ export default function PremiumExecutiveDashboard() {
           </Button>
           {!minimized["emailWidget"] && <EmailWidget emails={emails} darkMode={darkMode} />}
         </GridItem>
-        <GridItem>
+        <GridItem minimized={minimized["salesTrafficChart"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => toggleMinimize("salesTrafficChart")}
@@ -116,7 +117,7 @@ export default function PremiumExecutiveDashboard() {
           </Button>
           {!minimized["salesTrafficChart"] && <SalesTrafficChart salesData={salesData} darkMode={darkMode} />}
         </GridItem>
-        <GridItem>
+        <GridItem minimized={minimized["chatbot"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => toggleMinimize("chatbot")}
@@ -127,7 +128,7 @@ export default function PremiumExecutiveDashboard() {
             <Chatbot chatMessages={chatMessages} setChatMessages={setChatMessages} darkMode={darkMode} />
           )}
         </GridItem>
-        <GridItem>
+        <GridItem minimized={minimized["todoList"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => toggleMinimize("todoList")}
