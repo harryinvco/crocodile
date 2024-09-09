@@ -1,5 +1,6 @@
 import React from "react";
 import { Mail } from "lucide-react";
+import { DragHandle } from "./StyledComponents";
 
 const EmailWidget = ({ emails, darkMode }) => (
   <div style={{
@@ -8,6 +9,7 @@ const EmailWidget = ({ emails, darkMode }) => (
     padding: "20px",
     boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
   }}>
+    <DragHandle className="drag-handle" />
     <h2 style={{
       fontSize: "1.5rem",
       fontWeight: "bold",

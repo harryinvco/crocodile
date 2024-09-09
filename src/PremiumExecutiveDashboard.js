@@ -4,8 +4,7 @@ import EmailWidget from "./components/EmailWidget";
 import SalesTrafficChart from "./components/SalesTrafficChart";
 import Chatbot from "./components/Chatbot";
 import TodoList from "./components/TodoList";
-import { Container, Title, Button } from "./components/StyledComponents";
-import GridLayout from "react-grid-layout";
+import { Container, Title, Button, GridContainer, GridItem } from "./components/StyledComponents";
 
 const competitorData = [
   { name: "Comp A", marketShare: 20, growth: 5, satisfaction: 75 },
@@ -79,20 +78,15 @@ export default function PremiumExecutiveDashboard() {
     setMinimized((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const layout = [
-    { i: "competitorMonitoring", x: 0, y: 0, w: 1, h: 2 },
-    { i: "emailWidget", x: 1, y: 0, w: 1, h: 2 },
-    { i: "salesTrafficChart", x: 2, y: 0, w: 1, h: 2 },
-    { i: "chatbot", x: 0, y: 1, w: 1, h: 2 },
-    { i: "todoList", x: 1, y: 1, w: 1, h: 2 },
-  ];
-
   return (
     <Container darkMode={darkMode}>
       <Title>Crocodiles Shoes Executive Dashboard</Title>
-      <GridLayout className="layout" layout={layout} cols={3} rowHeight={150} width={1200}>
-        <div key="competitorMonitoring">
-          <Button onClick={() => toggleMinimize("competitorMonitoring")}>
+      <GridContainer>
+        <GridItem>
+          <Button
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => toggleMinimize("competitorMonitoring")}
+          >
             {minimized["competitorMonitoring"] ? "Maximize" : "Minimize"}
           </Button>
           {!minimized["competitorMonitoring"] && (
@@ -103,34 +97,46 @@ export default function PremiumExecutiveDashboard() {
               darkMode={darkMode}
             />
           )}
-        </div>
-        <div key="emailWidget">
-          <Button onClick={() => toggleMinimize("emailWidget")}>
+        </GridItem>
+        <GridItem>
+          <Button
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => toggleMinimize("emailWidget")}
+          >
             {minimized["emailWidget"] ? "Maximize" : "Minimize"}
           </Button>
           {!minimized["emailWidget"] && <EmailWidget emails={emails} darkMode={darkMode} />}
-        </div>
-        <div key="salesTrafficChart">
-          <Button onClick={() => toggleMinimize("salesTrafficChart")}>
+        </GridItem>
+        <GridItem>
+          <Button
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => toggleMinimize("salesTrafficChart")}
+          >
             {minimized["salesTrafficChart"] ? "Maximize" : "Minimize"}
           </Button>
           {!minimized["salesTrafficChart"] && <SalesTrafficChart salesData={salesData} darkMode={darkMode} />}
-        </div>
-        <div key="chatbot">
-          <Button onClick={() => toggleMinimize("chatbot")}>
+        </GridItem>
+        <GridItem>
+          <Button
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => toggleMinimize("chatbot")}
+          >
             {minimized["chatbot"] ? "Maximize" : "Minimize"}
           </Button>
           {!minimized["chatbot"] && (
             <Chatbot chatMessages={chatMessages} setChatMessages={setChatMessages} darkMode={darkMode} />
           )}
-        </div>
-        <div key="todoList">
-          <Button onClick={() => toggleMinimize("todoList")}>
+        </GridItem>
+        <GridItem>
+          <Button
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => toggleMinimize("todoList")}
+          >
             {minimized["todoList"] ? "Maximize" : "Minimize"}
           </Button>
           {!minimized["todoList"] && <TodoList todos={todos} setTodos={setTodos} darkMode={darkMode} />}
-        </div>
-      </GridLayout>
+        </GridItem>
+      </GridContainer>
       <div style={{ position: "fixed", top: "20px", right: "20px" }}>
         <Button onClick={() => setDarkMode(!darkMode)} darkMode={darkMode}>
           {darkMode ? "Light Mode" : "Dark Mode"}

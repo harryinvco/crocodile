@@ -13,19 +13,6 @@ export const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-export const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-`;
-
-export const Card = styled.div`
-  background-color: ${(props) => (props.darkMode ? "#1F2937" : "white")};
-  border-radius: 0.5rem;
-  padding: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-`;
-
 export const Button = styled.button`
   padding: 5px 10px;
   background-color: ${(props) => (props.darkMode ? "#F3F4F6" : "#1F2937")};
@@ -34,4 +21,26 @@ export const Button = styled.button`
   border-radius: 0.25rem;
   cursor: pointer;
   margin-bottom: 10px;
+`;
+
+export const GridItem = styled.div`
+  background-color: ${(props) => (props.darkMode ? "#1F2937" : "white")};
+  border-radius: 0.5rem;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: relative;
+`;
+
+export const DragHandle = styled.div`
+  cursor: move;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
+export const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(150px, auto);
+  gap: 20px;
 `;

@@ -1,8 +1,10 @@
 import React from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { DragHandle } from "./StyledComponents";
 
 const SalesTrafficChart = ({ salesData, darkMode }) => (
   <div style={{ /* styles */ }}>
+    <DragHandle className="drag-handle" />
     <h2 style={{ /* styles */ }}>Sales & Traffic</h2>
     <div style={{ height: "300px" }}>
       <ResponsiveContainer width="100%" height="100%">

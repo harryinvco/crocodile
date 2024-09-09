@@ -1,5 +1,6 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { DragHandle } from "./StyledComponents";
 
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
@@ -16,6 +17,7 @@ const CompetitorMonitoring = ({ competitorData, selectedCompetitor, setSelectedC
       padding: "20px",
       boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
     }}>
+      <DragHandle className="drag-handle" />
       <h2 style={{
         fontSize: "1.5rem",
         fontWeight: "bold",
