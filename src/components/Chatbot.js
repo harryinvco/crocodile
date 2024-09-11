@@ -1,24 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Send, MessageCircle } from "lucide-react";
-import { DragHandle } from "./StyledComponents";
+import axios from 'axios';
 
 const Chatbot = ({ chatMessages, setChatMessages, darkMode }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputMessage.trim()) {
-      setChatMessages([
-        ...chatMessages,
-        { role: "user", content: inputMessage },
-      ]);
-      setTimeout(() => {
-        setChatMessages((prev) => [
-          ...prev,
-          { role: "system", content: "I understand. How else can I help you?" },
-        ]);
-      }, 1000);
+      const userMessage = { role: "user", content: inputMessage };
+      setChatMessages([...chatMessages, userMessage]);
       setInputMessage("");
+
+      try {
+        const response = await axios.post('http://localhost:5000/chat', {
+          message: inputMessage,
+          session_id: sessionId
+        });
+
+        const botMessage = { role: "system", content: response.data.response };
+        setChatMessages(prev => [...prev, botMessage]);
+        setSessionId(response.data.session_id);
+      } catch (error) {
+        console.error('Error sending message:', error);
+        const errorMessage = { role: "system", content: "Sorry, there was an error processing your request." };
+        setChatMessages(prev => [...prev, errorMessage]);
+      }
     }
   };
 

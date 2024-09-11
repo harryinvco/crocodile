@@ -6,6 +6,7 @@ import Chatbot from "./components/Chatbot";
 import TodoList from "./components/TodoList";
 import { Container, DashboardContent, DarkModeToggle, Button } from "./components/StyledComponents";
 import crocoLogo from './assets/croco-logo.png'; 
+import axios from 'axios';
 
 const generateWeekData = (basePrice) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -142,9 +143,7 @@ const emails = [
 
 export default function PremiumExecutiveDashboard() {
   const [selectedCompetitor, setSelectedCompetitor] = useState("Nike Air Max 270");
-  const [chatMessages, setChatMessages] = useState([
-    { role: "system", content: "Hello! How can I assist you today?" },
-  ]);
+  const [chatMessages, setChatMessages] = useState([]);
   const [todos, setTodos] = useState([
     { id: 1, text: "Review Q3 strategy", completed: false },
     { id: 2, text: "Meet with investors", completed: false },
@@ -171,7 +170,11 @@ export default function PremiumExecutiveDashboard() {
           {darkMode ? "Light Mode" : "Dark Mode"}
         </Button>
       </DarkModeToggle>
-      <Chatbot chatMessages={chatMessages} setChatMessages={setChatMessages} darkMode={darkMode} />
+      <Chatbot 
+        chatMessages={chatMessages} 
+        setChatMessages={setChatMessages} 
+        darkMode={darkMode} 
+      />
     </Container>
   );
 }
