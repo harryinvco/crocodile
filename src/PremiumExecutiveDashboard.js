@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CompetitorMonitoring from "./components/CompetitorMonitoring";
 import EmailWidget from "./components/EmailWidget";
-import SalesTrafficChart from "./components/SalesTrafficChart";
+import SalesTrafficWidget from "./components/SalesTrafficWidget";
 import Chatbot from "./components/Chatbot";
 import TodoList from "./components/TodoList";
 import { Container, Title, Button, GridContainer, GridItem } from "./components/StyledComponents";
@@ -108,14 +108,14 @@ export default function PremiumExecutiveDashboard() {
           </Button>
           {!minimized["emailWidget"] && <EmailWidget emails={emails} darkMode={darkMode} />}
         </GridItem>
-        <GridItem minimized={minimized["salesTrafficChart"]}>
+        <GridItem minimized={minimized["salesTrafficWidget"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => toggleMinimize("salesTrafficChart")}
+            onClick={() => toggleMinimize("salesTrafficWidget")}
           >
-            {minimized["salesTrafficChart"] ? "Maximize" : "Minimize"}
+            {minimized["salesTrafficWidget"] ? "Maximize" : "Minimize"}
           </Button>
-          {!minimized["salesTrafficChart"] && <SalesTrafficChart salesData={salesData} darkMode={darkMode} />}
+          {!minimized["salesTrafficWidget"] && <SalesTrafficWidget salesData={salesData} darkMode={darkMode} />}
         </GridItem>
         <GridItem minimized={minimized["chatbot"]}>
           <Button
