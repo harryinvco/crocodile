@@ -5,10 +5,27 @@ export const Container = styled.div`
   background-color: ${(props) => (props.darkMode ? "#111827" : "#F9FAFB")};
   color: ${(props) => (props.darkMode ? "white" : "black")};
   padding: 20px;
+`;
 
-  @media (max-width: 768px) {
-    padding: 10px;
-  }
+export const DashboardContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+`;
+
+export const Widget = styled.div`
+  border-radius: 0.5rem;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+`;
+
+export const DarkModeToggle = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
 `;
 
 export const Title = styled.h1`

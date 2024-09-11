@@ -4,40 +4,112 @@ import EmailWidget from "./components/EmailWidget";
 import SalesTrafficWidget from "./components/SalesTrafficWidget";
 import Chatbot from "./components/Chatbot";
 import TodoList from "./components/TodoList";
-import { Container, Title, Button, GridContainer, GridItem } from "./components/StyledComponents";
-import Draggable from "react-draggable";
+import { Container, DashboardContent, DarkModeToggle, Button } from "./components/StyledComponents";
+import crocoLogo from './assets/croco-logo.png'; 
 
-const competitorData = [
-  { name: "Comp A", marketShare: 20, growth: 5, satisfaction: 75 },
-  { name: "Comp B", marketShare: 15, growth: 3, satisfaction: 70 },
-  { name: "Comp C", marketShare: 25, growth: -2, satisfaction: 68 },
-  { name: "Crocodiles", marketShare: 30, growth: 7, satisfaction: 82 },
-  { name: "Others", marketShare: 10, growth: 1, satisfaction: 72 },
-];
+const generateWeekData = (basePrice) => {
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  return days.map(day => ({
+    day,
+    StoreA: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+    StoreB: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+    StoreC: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+    OurStore: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+  }));
+};
 
-const salesData = [
-  { month: "Jan", sales: 4000, traffic: 1500 },
-  { month: "Feb", sales: 3000, traffic: 1300 },
-  { month: "Mar", sales: 5000, traffic: 1800 },
-  { month: "Apr", sales: 4500, traffic: 1600 },
-  { month: "May", sales: 6000, traffic: 2000 },
-  { month: "Jun", sales: 5500, traffic: 1900 },
-];
+const generateMonthData = (basePrice) => {
+  return Array.from({ length: 4 }, (_, i) => ({
+    day: `Week ${i + 1}`,
+    StoreA: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+    StoreB: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+    StoreC: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+    OurStore: +(basePrice + Math.random() * 10 - 5).toFixed(2),
+  }));
+};
+
+const generateYearData = (basePrice) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months.map(month => ({
+    day: month,
+    StoreA: +(basePrice + Math.random() * 20 - 10).toFixed(2),
+    StoreB: +(basePrice + Math.random() * 20 - 10).toFixed(2),
+    StoreC: +(basePrice + Math.random() * 20 - 10).toFixed(2),
+    OurStore: +(basePrice + Math.random() * 20 - 10).toFixed(2),
+  }));
+};
+
+const competitorData = {
+  "Nike Air Max 270": {
+    week: generateWeekData(150),
+    month: generateMonthData(150),
+    year: generateYearData(150),
+  },
+  "Adidas Ultraboost 21": {
+    week: generateWeekData(180),
+    month: generateMonthData(180),
+    year: generateYearData(180),
+  },
+  // ... other shoe models ...
+};
+
+const generateSalesData = (days, stores) => {
+  const data = [];
+  const startDate = new Date(2023, 0, 1);
+  for (let i = 0; i < days; i++) {
+    const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+    const entry = {
+      date: date.toISOString().split('T')[0],
+      totalSales: 0,
+      totalTraffic: 0,
+      totalOrders: 0,
+      averageOrderValue: 0,
+      conversionRate: 0,
+    };
+    stores.forEach(store => {
+      const sales = Math.floor(Math.random() * 10000) + 5000;
+      const traffic = Math.floor(Math.random() * 1000) + 500;
+      const orders = Math.floor(Math.random() * 100) + 50;
+      entry[`${store}Sales`] = sales;
+      entry[`${store}Traffic`] = traffic;
+      entry[`${store}Orders`] = orders;
+      entry.totalSales += sales;
+      entry.totalTraffic += traffic;
+      entry.totalOrders += orders;
+    });
+    entry.averageOrderValue = +(entry.totalSales / entry.totalOrders).toFixed(2);
+    entry.conversionRate = +((entry.totalOrders / entry.totalTraffic) * 100).toFixed(2);
+    data.push(entry);
+  }
+  return data;
+};
+
+const stores = ['Store A', 'Store B', 'Store C', 'Online'];
+
+const salesData = {
+  last30Days: generateSalesData(30, stores),
+  last90Days: generateSalesData(90, stores),
+  lastYear: generateSalesData(365, stores),
+};
 
 const emails = [
   {
     id: 1,
     sender: "John Doe",
-    subject: "Q2 Financial Report",
-    preview: "Attached is the Q2 financial report for your review. Key highlights include...",
+    subject: "Quarterly Report",
+    preview: "I've attached the quarterly report for your review. The numbers look promising...",
     timestamp: "10:30 AM",
+    read: false,
+    priority: true
   },
   {
     id: 2,
     sender: "Jane Smith",
-    subject: "New Store Opening",
-    preview: "The grand opening for our 19th location is scheduled for next month. Here are the details...",
+    subject: "New Product Launch",
+    preview: "We're ready to launch the new product line. Can we schedule a meeting to discuss the marketing strategy?",
     timestamp: "Yesterday",
+    read: true,
+    priority: false
   },
   {
     id: 3,
@@ -45,6 +117,8 @@ const emails = [
     subject: "Campaign Results",
     preview: "Here are the results of our latest marketing campaign. We've seen a significant increase in...",
     timestamp: "Yesterday",
+    read: false,
+    priority: true
   },
   {
     id: 4,
@@ -52,6 +126,8 @@ const emails = [
     subject: "New Hiring Policy",
     preview: "Please review the updated hiring policy for all new employees. The main changes include...",
     timestamp: "2 days ago",
+    read: true,
+    priority: false
   },
   {
     id: 5,
@@ -59,11 +135,13 @@ const emails = [
     subject: "System Maintenance",
     preview: "We will be performing system maintenance this weekend. Please expect some downtime...",
     timestamp: "3 days ago",
+    read: true,
+    priority: false
   },
 ];
 
 export default function PremiumExecutiveDashboard() {
-  const [selectedCompetitor, setSelectedCompetitor] = useState("All");
+  const [selectedCompetitor, setSelectedCompetitor] = useState("Nike Air Max 270");
   const [chatMessages, setChatMessages] = useState([
     { role: "system", content: "Hello! How can I assist you today?" },
   ]);
@@ -73,65 +151,26 @@ export default function PremiumExecutiveDashboard() {
     { id: 3, text: "Approve new hires", completed: true },
   ]);
   const [darkMode, setDarkMode] = useState(false);
-  const [minimized, setMinimized] = useState({});
-
-  const toggleMinimize = (key) => {
-    setMinimized((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
 
   return (
     <Container darkMode={darkMode}>
-      <Title>Crocodiles Shoes Executive Dashboard</Title>
-      <GridContainer>
-        <GridItem minimized={minimized["competitorMonitoring"]}>
-          <Button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => toggleMinimize("competitorMonitoring")}
-          >
-            {minimized["competitorMonitoring"] ? "Maximize" : "Minimize"}
-          </Button>
-          {!minimized["competitorMonitoring"] && (
-            <CompetitorMonitoring
-              competitorData={competitorData}
-              selectedCompetitor={selectedCompetitor}
-              setSelectedCompetitor={setSelectedCompetitor}
-              darkMode={darkMode}
-            />
-          )}
-        </GridItem>
-        <GridItem minimized={minimized["emailWidget"]}>
-          <Button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => toggleMinimize("emailWidget")}
-          >
-            {minimized["emailWidget"] ? "Maximize" : "Minimize"}
-          </Button>
-          {!minimized["emailWidget"] && <EmailWidget emails={emails} darkMode={darkMode} />}
-        </GridItem>
-        <GridItem minimized={minimized["salesTrafficWidget"]}>
-          <Button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => toggleMinimize("salesTrafficWidget")}
-          >
-            {minimized["salesTrafficWidget"] ? "Maximize" : "Minimize"}
-          </Button>
-          {!minimized["salesTrafficWidget"] && <SalesTrafficWidget salesData={salesData} darkMode={darkMode} />}
-        </GridItem>
-        <GridItem minimized={minimized["todoList"]}>
-          <Button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => toggleMinimize("todoList")}
-          >
-            {minimized["todoList"] ? "Maximize" : "Minimize"}
-          </Button>
-          {!minimized["todoList"] && <TodoList todos={todos} setTodos={setTodos} darkMode={darkMode} />}
-        </GridItem>
-      </GridContainer>
-      <div style={{ position: "fixed", top: "20px", right: "20px" }}>
+      <img src={crocoLogo} alt="Crocodiles Shoes Logo" style={{ maxWidth: "200px", marginBottom: "20px" }} />
+      <DashboardContent>
+        <CompetitorMonitoring
+          competitorData={competitorData}
+          selectedCompetitor={selectedCompetitor}
+          setSelectedCompetitor={setSelectedCompetitor}
+          darkMode={darkMode}
+        />
+        <EmailWidget emails={emails} darkMode={darkMode} />
+        <SalesTrafficWidget salesData={salesData} darkMode={darkMode} />
+        <TodoList todos={todos} setTodos={setTodos} darkMode={darkMode} />
+      </DashboardContent>
+      <DarkModeToggle>
         <Button onClick={() => setDarkMode(!darkMode)} darkMode={darkMode}>
           {darkMode ? "Light Mode" : "Dark Mode"}
         </Button>
-      </div>
+      </DarkModeToggle>
       <Chatbot chatMessages={chatMessages} setChatMessages={setChatMessages} darkMode={darkMode} />
     </Container>
   );

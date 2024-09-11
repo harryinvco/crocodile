@@ -1,78 +1,139 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { DragHandle } from "./StyledComponents";
+import { TrendingUp, TrendingDown, DollarSign, BarChart2, AlertTriangle } from "lucide-react";
 
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
 
-const dummyData = {
-  "Nike Air Max": [
-    { day: "Monday", StoreA: 120, StoreB: 115, StoreC: 110, OurStore: 118 },
-    { day: "Tuesday", StoreA: 122, StoreB: 117, StoreC: 112, OurStore: 119 },
-    { day: "Wednesday", StoreA: 121, StoreB: 116, StoreC: 111, OurStore: 117 },
-    { day: "Thursday", StoreA: 123, StoreB: 118, StoreC: 113, OurStore: 120 },
-    { day: "Friday", StoreA: 124, StoreB: 119, StoreC: 114, OurStore: 121 },
-    { day: "Saturday", StoreA: 125, StoreB: 120, StoreC: 115, OurStore: 122 },
-    { day: "Sunday", StoreA: 126, StoreB: 121, StoreC: 116, OurStore: 123 },
-  ],
-  "Adidas Ultraboost": [
-    { day: "Monday", StoreA: 130, StoreB: 125, StoreC: 120, OurStore: 128 },
-    { day: "Tuesday", StoreA: 132, StoreB: 127, StoreC: 122, OurStore: 129 },
-    { day: "Wednesday", StoreA: 131, StoreB: 126, StoreC: 121, OurStore: 127 },
-    { day: "Thursday", StoreA: 133, StoreB: 128, StoreC: 123, OurStore: 130 },
-    { day: "Friday", StoreA: 134, StoreB: 129, StoreC: 124, OurStore: 131 },
-    { day: "Saturday", StoreA: 135, StoreB: 130, StoreC: 125, OurStore: 132 },
-    { day: "Sunday", StoreA: 136, StoreB: 131, StoreC: 126, OurStore: 133 },
-  ],
-};
+const CompetitorMonitoring = ({ competitorData, selectedCompetitor, setSelectedCompetitor, darkMode }) => {
+  const [dateRange, setDateRange] = useState("week");
 
-const CompetitorMonitoring = ({ darkMode }) => {
-  const [selectedShoe, setSelectedShoe] = useState("Nike Air Max");
+  const dateRanges = {
+    "week": "Last Week",
+    "month": "Last Month",
+    "year": "Last Year"
+  };
 
-  const filteredCompetitorData = dummyData[selectedShoe];
+  const filteredData = competitorData[selectedCompetitor][dateRange];
 
-  // Calculate min and max prices for Y-axis domain
-  const prices = filteredCompetitorData.flatMap(data => [data.StoreA, data.StoreB, data.StoreC, data.OurStore]);
-  const minPrice = Math.min(...prices);
-  const maxPrice = Math.max(...prices);
+  const indicators = useMemo(() => {
+    const lastIndex = filteredData.length - 1;
+    const ourLastPrice = filteredData[lastIndex].OurStore;
+    const ourPrevPrice = filteredData[lastIndex - 1].OurStore;
+    const avgCompetitorPrice = (filteredData[lastIndex].StoreA + filteredData[lastIndex].StoreB + filteredData[lastIndex].StoreC) / 3;
+    const priceTrend = ourLastPrice > ourPrevPrice ? "up" : "down";
+    const priceDiff = Math.abs(ourLastPrice - ourPrevPrice).toFixed(2);
+    const competitorDiff = (ourLastPrice - avgCompetitorPrice).toFixed(2);
+    const forecast = (ourLastPrice * 1.05).toFixed(2); // Simple 5% increase forecast
+
+    return { ourLastPrice, priceTrend, priceDiff, competitorDiff, forecast };
+  }, [filteredData]);
+
+  const IndicatorBox = ({ title, value, icon: Icon, color }) => (
+    <div style={{ 
+      backgroundColor: darkMode ? "#374151" : "#F3F4F6", 
+      padding: "10px", 
+      borderRadius: "8px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between"
+    }}>
+      <div>
+        <div style={{ fontSize: "0.875rem", color: darkMode ? "#9CA3AF" : "#6B7280" }}>{title}</div>
+        <div style={{ fontSize: "1.25rem", fontWeight: "bold", color: color }}>{value}</div>
+      </div>
+      <Icon size={24} color={color} />
+    </div>
+  );
 
   return (
     <div style={{
-      gridColumn: "span 2",
       backgroundColor: darkMode ? "#1F2937" : "white",
       borderRadius: "0.5rem",
       padding: "20px",
       boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
       width: "100%",
-      maxWidth: "600px",
-      margin: "0 auto",
     }}>
-      <DragHandle className="drag-handle" />
       <h2 style={{
         fontSize: "1.5rem",
         fontWeight: "bold",
         marginBottom: "10px",
       }}>Competitor Price Analysis</h2>
-      <select
-        value={selectedShoe}
-        onChange={(e) => setSelectedShoe(e.target.value)}
-        style={{ marginBottom: "10px", padding: "5px" }}
-      >
-        {Object.keys(dummyData).map((shoe) => (
-          <option key={shoe} value={shoe}>{shoe}</option>
-        ))}
-      </select>
-      <div style={{ height: "300px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", marginBottom: "20px" }}>
+        <select
+          value={selectedCompetitor}
+          onChange={(e) => setSelectedCompetitor(e.target.value)}
+          style={{ 
+            padding: "5px",
+            backgroundColor: darkMode ? "#374151" : "white",
+            color: darkMode ? "white" : "black",
+            border: "1px solid #D1D5DB",
+            borderRadius: "0.25rem",
+            marginBottom: "10px",
+            width: "100%",
+            maxWidth: "200px",
+          }}
+        >
+          {Object.keys(competitorData).map((shoe) => (
+            <option key={shoe} value={shoe}>{shoe}</option>
+          ))}
+        </select>
+        <select
+          value={dateRange}
+          onChange={(e) => setDateRange(e.target.value)}
+          style={{ 
+            padding: "5px",
+            backgroundColor: darkMode ? "#374151" : "white",
+            color: darkMode ? "white" : "black",
+            border: "1px solid #D1D5DB",
+            borderRadius: "0.25rem",
+            marginBottom: "10px",
+            width: "100%",
+            maxWidth: "200px",
+          }}
+        >
+          {Object.entries(dateRanges).map(([value, label]) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
+        </select>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "10px", marginBottom: "20px" }}>
+        <IndicatorBox 
+          title="Our Price" 
+          value={`$${indicators.ourLastPrice.toFixed(2)}`} 
+          icon={DollarSign} 
+          color="#3B82F6"
+        />
+        <IndicatorBox 
+          title="Price Trend" 
+          value={`${indicators.priceDiff} ${indicators.priceTrend === "up" ? "▲" : "▼"}`} 
+          icon={indicators.priceTrend === "up" ? TrendingUp : TrendingDown} 
+          color={indicators.priceTrend === "up" ? "#10B981" : "#EF4444"}
+        />
+        <IndicatorBox 
+          title="Vs Competitors" 
+          value={`${indicators.competitorDiff > 0 ? "+" : ""}${indicators.competitorDiff}`} 
+          icon={BarChart2} 
+          color={indicators.competitorDiff > 0 ? "#F59E0B" : "#8B5CF6"}
+        />
+        <IndicatorBox 
+          title="Price Forecast" 
+          value={`$${indicators.forecast}`} 
+          icon={AlertTriangle} 
+          color="#EC4899"
+        />
+      </div>
+      <div style={{ height: "400px" }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={filteredCompetitorData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <LineChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" />
-            <YAxis domain={[minPrice - 5, maxPrice + 5]} />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="StoreA" stroke={COLORS[0]} />
-            <Line type="monotone" dataKey="StoreB" stroke={COLORS[1]} />
-            <Line type="monotone" dataKey="StoreC" stroke={COLORS[2]} />
-            <Line type="monotone" dataKey="OurStore" stroke={COLORS[3]} />
+            <XAxis dataKey="day" angle={-45} textAnchor="end" height={60} />
+            <YAxis domain={['auto', 'auto']} />
+            <Tooltip formatter={(value) => value.toFixed(2)} />
+            <Legend verticalAlign="top" height={36}/>
+            <Line type="monotone" dataKey="StoreA" stroke={COLORS[0]} strokeWidth={2} />
+            <Line type="monotone" dataKey="StoreB" stroke={COLORS[1]} strokeWidth={2} />
+            <Line type="monotone" dataKey="StoreC" stroke={COLORS[2]} strokeWidth={2} />
+            <Line type="monotone" dataKey="OurStore" stroke={COLORS[3]} strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
