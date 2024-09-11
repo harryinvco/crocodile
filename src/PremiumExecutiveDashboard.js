@@ -117,17 +117,6 @@ export default function PremiumExecutiveDashboard() {
           </Button>
           {!minimized["salesTrafficWidget"] && <SalesTrafficWidget salesData={salesData} darkMode={darkMode} />}
         </GridItem>
-        <GridItem minimized={minimized["chatbot"]}>
-          <Button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => toggleMinimize("chatbot")}
-          >
-            {minimized["chatbot"] ? "Maximize" : "Minimize"}
-          </Button>
-          {!minimized["chatbot"] && (
-            <Chatbot chatMessages={chatMessages} setChatMessages={setChatMessages} darkMode={darkMode} />
-          )}
-        </GridItem>
         <GridItem minimized={minimized["todoList"]}>
           <Button
             onMouseDown={(e) => e.stopPropagation()}
@@ -143,6 +132,7 @@ export default function PremiumExecutiveDashboard() {
           {darkMode ? "Light Mode" : "Dark Mode"}
         </Button>
       </div>
+      <Chatbot chatMessages={chatMessages} setChatMessages={setChatMessages} darkMode={darkMode} />
     </Container>
   );
 }
